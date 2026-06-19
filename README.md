@@ -1,7 +1,5 @@
 <div align="center">
 
-<img src="src/assets/hero.png" alt="Ayurveda Prakriti Assistant banner" width="50%" />
-
 # 🌿 AI-Powered Ayurveda Prakriti Assistant
 
 ### *Know your Dosha. Live your Prakriti. Ask anything.*
@@ -62,17 +60,24 @@ A React app that scores a 35-question Ayurveda quiz into your Vata / Pitta / Kap
 
 ```mermaid
 flowchart TD
-    subgraph Browser["Browser — React SPA on GitHub Pages"]
+    subgraph Browser["🖥️ Browser — React SPA (GitHub Pages)"]
         Quiz["📝 Quiz.jsx<br/>35 questions"]
         Score["⚙️ doshaUtils.js<br/>calculatePrakriti()"]
         Results["📊 Results.jsx"]
-        Guide["📅 LifestyleGuide"]
-        PdfExport["📄 generatePDF.js"]
+        Guide["📅 LifestyleGuide/*"]
+        PDF["📄 generatePDF.js"]
         Coach["🤖 Coach.jsx<br/>chat UI"]
-        Api["📡 coachApi.js<br/>askCoach()"]
+        API["📡 coachApi.js<br/>askCoach()"]
+
+        Quiz --> Score
+        Score --> Results
+        Score --> Guide
+        Score --> Coach
+        Guide --> PDF
+        Coach --> API
     end
 
-    subgraph Data["🗂️ src/data — JSON knowledge base"]
+    subgraph Data["🗂️ src/data/*.json"]
         D1["dosha_questions.json"]
         D2["dosha_profiles.json"]
         D3["dincharya.json"]
@@ -81,45 +86,31 @@ flowchart TD
         D6["exercise_recommendations.json"]
     end
 
-    subgraph CF["☁️ Cloudflare Worker"]
+    Quiz -.reads.-> D1
+    Results -.reads.-> D2
+    Guide -.reads.-> D2 & D3 & D4 & D5 & D6
+    PDF -.reads.-> D3 & D4 & D5 & D6
+
+    API -- "HTTPS POST<br/>{ messages, prakriti }" --> Worker
+
+    subgraph CF["☁️ Cloudflare Worker (worker/)"]
         Worker["index.js<br/>CORS · validation"]
-        Context["doshaContext.js<br/>buildDoshaContext()"]
-        Secret["🔑 ANTHROPIC_API_KEY<br/>Worker secret"]
+        Context["doshaContext.js<br/>buildDoshaContext()<br/>extracts ONLY the<br/>dominant dosha's data"]
+        Secret["🔑 ANTHROPIC_API_KEY<br/>(Worker secret — never in code)"]
+
+        Worker --> Context
+        Context -.reads (same files).-> D2 & D3 & D4 & D5 & D6
+        Worker --> Secret
     end
 
-    Claude["🧠 Claude Haiku 4.5<br/>Anthropic API"]
+    Worker -- "system prompt +<br/>chat history" --> Claude["🧠 Claude Haiku 4.5<br/>(Anthropic API)"]
+    Claude -- "reply" --> Worker
+    Worker -- "{ reply }" --> API
 
-    Quiz --> Score
-    Score --> Results
-    Score --> Guide
-    Score --> Coach
-    Guide --> PdfExport
-    Coach --> Api
-
-    Quiz -.-> D1
-    Results -.-> D2
-    Guide -.-> D2
-    Guide -.-> D3
-    Guide -.-> D4
-    Guide -.-> D5
-    Guide -.-> D6
-    PdfExport -.-> D3
-    PdfExport -.-> D4
-    PdfExport -.-> D5
-    PdfExport -.-> D6
-
-    Worker --> Context
-    Worker --> Secret
-    Context -.-> D2
-    Context -.-> D3
-    Context -.-> D4
-    Context -.-> D5
-    Context -.-> D6
-
-    Api --> Worker
-    Worker --> Claude
-    Claude --> Worker
-    Worker --> Api
+    style Browser fill:#faf7f2,stroke:#c0704a
+    style CF fill:#fdf6f2,stroke:#e8b49a
+    style Claude fill:#2d2418,stroke:#c0704a,color:#fff
+    style Data fill:#f3ede0,stroke:#d4c4a8
 ```
 
 **Key idea:** the frontend never talks to Anthropic directly. `coachApi.js` only ever calls the Worker, and the Worker is the only place the Claude API key exists.

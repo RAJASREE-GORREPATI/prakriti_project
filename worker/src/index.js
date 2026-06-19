@@ -5,7 +5,8 @@ const VALID_ROLES = new Set(['user', 'assistant']);
 const MAX_HISTORY_MESSAGES = 20;
 
 const ALLOWED_ORIGINS = new Set([
-  'https://rehanas.github.io',
+  'https://RAJASREE-GORREPATI.github.io',
+  'https://rajasree-gorrepati.github.io',
   'http://localhost:5173',
 ]);
 

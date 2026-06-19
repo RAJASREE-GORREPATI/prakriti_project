@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project
 
-A React SPA that runs a 35-question Ayurveda Prakriti (dosha) quiz, scores it into Vata/Pitta/Kapha, and renders a personalized lifestyle guide. The frontend is deployed as a static site to GitHub Pages (`https://rehanas.github.io/ayurveda-prakriti/`); all quiz/lifestyle content is static JSON, with no backend involved.
+A React SPA that runs a 35-question Ayurveda Prakriti (dosha) quiz, scores it into Vata/Pitta/Kapha, and renders a personalized lifestyle guide. The frontend is deployed as a static site to GitHub Pages (`https://RAJASREE-GORREPATI.github.io/prakriti_project/`); all quiz/lifestyle content is static JSON, with no backend involved.
 
 The one exception is the **AI Coach** chat feature, which needs a live LLM call and therefore has its own small Cloudflare Worker backend (`worker/`) — see the dedicated section below. Everything else in the app remains backend-free.
 
@@ -51,7 +51,7 @@ Any component that needs the dosha result calls `calculatePrakriti(scores)` itse
 
 **Styling is Tailwind v4** via `@tailwindcss/vite` — no `tailwind.config.js`, no `@tailwind` directives. Colors are mostly arbitrary-value hex literals inline (e.g. `bg-[#faf7f2]`) rather than theme tokens, matching the existing earthy palette (cream background, terracotta `#c0704a` accent, sage green, muted blue).
 
-**Vite `base` is set to `/ayurveda-prakriti/`** in `vite.config.js` for GitHub Pages — required for asset paths to resolve correctly once deployed under that subpath.
+**Vite `base` is set to `/prakriti_project/`** in `vite.config.js` for GitHub Pages — required for asset paths to resolve correctly once deployed under that subpath. This must stay in sync with the `homepage` field in `package.json` and with the repo name on GitHub — if either the GitHub repo or the GH Pages account is renamed, all three (`vite.config.js` `base`, `package.json` `homepage`, and the Worker's `ALLOWED_ORIGINS` in `worker/src/index.js`) need to be updated together.
 
 ### AI Coach (Cloudflare Worker backend)
 

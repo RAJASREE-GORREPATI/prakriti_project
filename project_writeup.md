@@ -8,7 +8,7 @@
 
 ### What Was Built
 A fully interactive **Ayurveda Prakriti (dosha) assessment web app**, deployed publicly on GitHub Pages at:
-**https://rajasree-gorrepati.github.io/prakriti_project/index.html**
+**https://RAJASREE-GORREPATI.github.io/prakriti_project/**
 
 The app guides users through a 35-question quiz to determine their Ayurvedic constitutional type (Prakriti), then delivers a personalised lifestyle guide based on their results.
 
@@ -233,5 +233,5 @@ The original "Meet Coach" page (Rehana's bio, HAC credential, services, email bo
 
 *Document generated: June 2026 · Section 7 (AI Coach Chat) added: June 2026*
 *App repository: https://github.com/RAJASREE-GORREPATI/prakriti_project*
-*Live app: https://rajasree-gorrepati.github.io/prakriti_project/index.html*
+*Live app: https://RAJASREE-GORREPATI.github.io/prakriti_project/*
 *AI Coach backend: https://ayurveda-coach.prakriti-ai-assistant.workers.dev*

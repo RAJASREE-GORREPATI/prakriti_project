@@ -158,7 +158,6 @@ prakriti_project/
 │   │   └── doshaContext.js       # Per-dosha system-prompt builder
 │   └── wrangler.toml
 ├── CLAUDE.md                     # Guidance for AI coding agents
-├── project_writeup.md            # Build log / decisions journal
 └── vite.config.js
 ```
 

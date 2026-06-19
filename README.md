@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="src/assets/hero.png" alt="Ayurveda Prakriti Assistant banner" width="100%" />
+<img src="src/assets/hero.png" alt="Ayurveda Prakriti Assistant banner" width="50%" />
 
 # 🌿 AI-Powered Ayurveda Prakriti Assistant
 

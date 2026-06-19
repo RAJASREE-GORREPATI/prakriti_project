@@ -21,15 +21,17 @@ The app guides users through a 35-question quiz to determine their Ayurvedic con
 | **Lifestyle Guide** | 4 tabbed sections: Dincharya (daily routine timeline), Ritucharya (6-season guide), Ahara (diet with food categories), Vyayama (exercise + yoga). |
 | **PDF Download** | Generates a formatted 5-page PDF of the personalised lifestyle guide using jsPDF. |
 | **Herb Warning Banner** | Disclaimer on every lifestyle guide page advising consultation with a practitioner before starting herbs, emphasising moderation and body awareness. |
-| **Meet Coach Page** | Introduces Rehana Sheikh — bio, HAC credential (with certificate link), services, and email booking CTA. |
+| **AI Coach Chat** | Conversational AI assistant (replaces the original static "Meet Coach" page) that answers free-form questions, personalised to the user's own Prakriti result and grounded in the app's Ayurveda knowledge base. Renders Markdown (headings, bold, lists, tables). |
 
 ### Tech Stack
 - **Frontend:** React 19 + Vite 8
 - **Styling:** Tailwind CSS v4 (via @tailwindcss/vite plugin)
 - **Chart:** Recharts (donut/pie chart)
 - **PDF generation:** jsPDF
-- **Data:** 6 structured JSON files (no backend, no database)
-- **Deployment:** GitHub Pages via gh-pages npm package
+- **AI Coach rendering:** react-markdown + remark-gfm (tables, GFM syntax)
+- **AI Coach backend:** Cloudflare Worker (serverless) calling Claude Haiku 4.5 via `@anthropic-ai/sdk` — the only backend in the app, added solely to keep the Claude API key off the client
+- **Data:** 6 structured JSON files (no database)
+- **Deployment:** Frontend on GitHub Pages via gh-pages npm package; AI Coach Worker deployed independently via Wrangler
 
 ---
 
@@ -198,9 +200,38 @@ I added jpeg image
 - **Progress persistence** — save quiz progress to localStorage so users can resume
 - **Pitta/Vata/Kapha secondary guide toggle** — allow dual-dosha users to view both doshas' guides side by side
 - **Analytics** — track which dosha is most common among users (privacy-safe, no PII)
+- **AI Coach rate limiting** — the Worker endpoint is public; add per-IP throttling or a Cloudflare rate-limiting rule to bound abuse/cost
+- **AI Coach conversation persistence** — chat history currently lives only in React state and is lost on refresh; consider localStorage
+- **Streaming AI Coach responses** — stream tokens from the Worker instead of waiting for the full reply, for a more responsive feel on longer answers
 
 ---
 
-*Document generated: June 2026*
+## 7. AI Coach Chat — Week 2 Addendum
+
+### What Changed
+The original "Meet Coach" page (Rehana's bio, HAC credential, services, email booking CTA) was replaced with a live **AI Coach chat** — a conversational assistant that answers the user's own questions, personalised to their computed Prakriti, instead of a static introduction page. The bio/booking content was removed entirely rather than kept alongside the chat.
+
+### Architecture
+- **No new frontend framework or routing** — `Coach.jsx` still slots into the same page-state machine in `App.jsx`; it now receives `scores` as a prop (previously only `onBack`) and derives `prakriti` via the existing `calculatePrakriti()`, exactly like `Results.jsx` and `LifestyleGuide.jsx` already did.
+- **`src/utils/coachApi.js`** — a thin `askCoach({ messages, prakriti })` fetch wrapper that is the *only* thing the frontend calls. It never talks to Anthropic directly.
+- **New `worker/` directory — a Cloudflare Worker, deployed independently of the GitHub Pages frontend via Wrangler:**
+  - `worker/src/index.js` — validates the request, restricts CORS to the GH Pages origin (+ localhost for dev), caps chat history to the last 20 messages, and calls Claude Haiku 4.5 via `@anthropic-ai/sdk`.
+  - `worker/src/doshaContext.js` — builds the system prompt by extracting **only the user's dominant dosha's branch** from each of the 5 knowledge-base JSON files (`dosha_profiles.json`, `dincharya.json`, `ritucharya.json`, `diet_recommendations.json`, `exercise_recommendations.json`) instead of sending the full ~75KB of all three doshas. `dosha_questions.json` (quiz-only) is never read. This keeps the prompt to roughly 10-15K tokens and keeps answers scoped to the user's actual constitution.
+  - The Claude API key is stored as a Cloudflare Worker secret (`wrangler secret put ANTHROPIC_API_KEY`) and is never present in any committed file or the frontend bundle.
+
+### Key Decisions
+- **Backend required, despite "no backend" being a deliberate Week 1 constraint.** A real conversational AI needs a model call, and the Claude API key cannot ship in public client-side JS. A Cloudflare Worker was chosen over embedding the key client-side (rejected for the obvious key-exposure risk) and over a traditional always-on server (a serverless function fits a low-traffic personal app better — scales to zero, no process to manage, free tier is generous).
+- **Claude Haiku 4.5, not a larger model.** Because the Worker endpoint is public, anyone who finds the URL can call it — cost/abuse exposure was treated as a real factor, not just answer quality, and Haiku 4.5 was chosen specifically to bound that exposure while remaining plenty capable for JSON-grounded Q&A.
+- **Per-dosha extraction over full-file context.** Sending all three doshas' content on every request would have been simpler to write but ~3x the tokens and prone to leaking irrelevant (or contradictory) advice into answers for a single-dosha user.
+- **Markdown + GFM tables, not plain text.** AI replies render via `react-markdown` (headings, bold, lists) plus `remark-gfm` (tables) with Tailwind-styled element overrides matching the app's existing earthy palette, rather than raw text or a heavier solution like a full typography plugin.
+
+### Bugs Found and Fixed Post-Launch
+- **Claude re-asking for the dosha.** Even though the frontend always sent the computed `prakriti` object, early replies sometimes asked "What's your dosha?" or "Have you taken the assessment?" — the system prompt buried the dosha facts inside JSON blobs without ever stating plainly that the assessment was already done. Fixed by adding explicit, unambiguous instructions at the top of the system prompt (the user's result and percentages stated as plain facts, with a hard rule never to ask for them) and listing exactly when a follow-up question *is* appropriate (diet preference, season, allergies — things genuinely not inferable from the result).
+- **Long answers (weekly meal plans, routines) getting cut off mid-sentence.** `max_tokens` was raised from 1024 to 4096, the prompt was updated to ask for concise per-day summaries (3-4 lines, not paragraphs) and to self-paginate very long answers (e.g. Mon-Wed, then Thu-Sat, then Sun + summary, asking the user to continue), and the Worker now appends a "response continues" note if the model still hits the token cap, instead of silently truncating.
+
+---
+
+*Document generated: June 2026 · Section 7 (AI Coach Chat) added: June 2026*
 *App repository: https://github.com/REhanaS/ayurveda-prakriti*
 *Live app: https://rehanas.github.io/ayurveda-prakriti/*
+*AI Coach backend: https://ayurveda-coach.prakriti-ai-assistant.workers.dev*

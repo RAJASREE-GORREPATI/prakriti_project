@@ -1,0 +1,16 @@
+{
+  "name": "ayurveda-coach-worker",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.105.0"
+  },
+  "devDependencies": {
+    "wrangler": "^4.0.0"
+  }
+}

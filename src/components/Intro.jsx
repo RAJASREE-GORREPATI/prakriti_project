@@ -53,7 +53,7 @@ export default function Intro({ onStart, onCoach }) {
             onClick={onCoach}
             className="border border-[#d4c4a8] text-[#5c4d33] px-8 py-4 rounded-full text-sm font-sans font-medium tracking-widest uppercase hover:border-[#9c8660] hover:bg-[#f3ede0] transition-colors duration-200 cursor-pointer"
           >
-            Meet Coach
+            Prakriti AI 🌿🤖
           </button>
         </div>
 

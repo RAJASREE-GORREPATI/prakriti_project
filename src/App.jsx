@@ -47,7 +47,7 @@ export default function App() {
         />
       )}
       {page === 'coach' && (
-        <Coach onBack={() => setPage(prevPage)} />
+        <Coach scores={scores} onBack={() => setPage(prevPage)} />
       )}
     </div>
   );

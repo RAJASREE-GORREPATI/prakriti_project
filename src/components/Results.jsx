@@ -213,7 +213,7 @@ export default function Results({ scores, onViewGuide, onRetake, onCoach }) {
             onClick={onCoach}
             className="flex-1 bg-[#c0704a] text-white py-4 rounded-full text-xs font-sans uppercase tracking-widest hover:bg-[#a85e3d] transition-colors cursor-pointer"
           >
-            Meet Coach
+            PRAKRITI AI 🌿🤖
           </button>
           <button
             onClick={onRetake}

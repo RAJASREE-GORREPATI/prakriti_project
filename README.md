@@ -226,19 +226,6 @@ CORS is locked down in `worker/src/index.js` (`ALLOWED_ORIGINS`) to the deployed
 
 ---
 
-## 🔮 Future Enhancements
-
-- [ ] 🔁 **Streaming AI Coach replies** — stream tokens from the Worker instead of waiting for the full response
-- [ ] 💾 **Conversation persistence** — save AI Coach chat history to `localStorage` so it survives a refresh
-- [ ] 🚦 **Rate limiting** — protect the public Worker endpoint from abuse/cost overrun
-- [ ] 🔗 **Shareable results link** — encode dosha scores in the URL
-- [ ] ✉️ **Email results** — let users email themselves the PDF directly
-- [ ] 🌍 **Multi-language support** — Sanskrit terms with hover explanations
-- [ ] 💽 **Quiz progress persistence** — resume an in-progress assessment
-- [ ] 🔀 **Dual-dosha guide toggle** — view both doshas' lifestyle guides side by side
-- [ ] 📈 **Privacy-safe analytics** — track aggregate dosha distribution, no PII
-
----
 
 <div align="center">
 

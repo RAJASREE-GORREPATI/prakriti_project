@@ -26,7 +26,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#faf7f2]">
+    <div key={page} className="min-h-screen bg-[#faf7f2] page-enter">
       {page === 'intro' && (
         <Intro onStart={() => goTo('quiz')} onCoach={() => goTo('coach')} />
       )}

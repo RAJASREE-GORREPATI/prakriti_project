@@ -17,7 +17,7 @@ const markdownComponents = {
   ol: ({ children }) => <ol className="list-decimal pl-5 space-y-1 mb-2 last:mb-0">{children}</ol>,
   li: ({ children }) => <li>{children}</li>,
   a: ({ children, href }) => (
-    <a href={href} target="_blank" rel="noopener noreferrer" className="underline text-[#c0704a]">
+    <a href={href} target="_blank" rel="noopener noreferrer" className="underline text-[#C06830]">
       {children}
     </a>
   ),
@@ -100,7 +100,7 @@ export default function Coach({ scores, onBack }) {
   return (
     <div className="min-h-screen flex flex-col bg-[#faf7f2]">
       {/* Top bar */}
-      <div className="sticky top-0 z-10 bg-[#faf7f2] border-b border-[#e8dcc8]">
+      <div className="sticky top-0 z-10 bg-[#faf7f2]/95 backdrop-blur-sm border-b border-[#e8dcc8]" style={{ boxShadow: '0 1px 12px rgba(45,36,24,0.06)' }}>
         <div className="max-w-2xl mx-auto px-6 py-4 flex items-center justify-between">
           <button
             onClick={onBack}
@@ -198,7 +198,8 @@ export default function Coach({ scores, onBack }) {
           <button
             onClick={handleSend}
             disabled={loading || !input.trim()}
-            className="px-6 py-3 rounded-full text-xs font-sans uppercase tracking-widest bg-[#2d2418] text-[#faf7f2] hover:bg-[#5c4d33] transition-colors disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
+            className="px-6 py-3 rounded-full text-xs font-sans uppercase tracking-widest bg-[#2d2418] text-[#faf7f2] transition-all disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
+            style={{ boxShadow: '0 4px 16px rgba(45,36,24,0.22)' }}
           >
             Send
           </button>

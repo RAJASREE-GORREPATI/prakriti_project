@@ -362,11 +362,12 @@
       "id": 33,
       "category": "physiological",
       "subcategory": "menstrual_cycle",
-      "question": "If applicable, how is your menstrual cycle?",
+      "question": "How is your menstrual cycle?",
       "options": [
         { "text": "Irregular, scanty, painful cramps, dark blood", "dosha": "vata", "score": 3 },
         { "text": "Regular, heavy flow, warm, prone to PMS irritability", "dosha": "pitta", "score": 3 },
-        { "text": "Regular, moderate, mild symptoms, water retention", "dosha": "kapha", "score": 3 }
+        { "text": "Regular, moderate, mild symptoms, water retention", "dosha": "kapha", "score": 3 },
+        { "text": "Not applicable to me", "dosha": "skip", "score": 0 }
       ]
     },
     {

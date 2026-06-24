@@ -1,19 +1,19 @@
 export const DOSHA_COLORS = {
-  vata: '#7c9eb2',
-  pitta: '#c0704a',
-  kapha: '#6b8f71',
+  vata: '#4A78A8',
+  pitta: '#C06830',
+  kapha: '#3A7A50',
 };
 
 export const DOSHA_BG = {
-  vata: '#eef4f8',
-  pitta: '#f9ede6',
-  kapha: '#edf3ee',
+  vata: '#E0EAF6',
+  pitta: '#F5E6D5',
+  kapha: '#DAF0E3',
 };
 
 export const DOSHA_BORDER = {
-  vata: '#b8d0dc',
-  pitta: '#e8b49a',
-  kapha: '#a8c9ad',
+  vata: '#80B0D8',
+  pitta: '#D8A870',
+  kapha: '#68B882',
 };
 
 export function calculatePrakriti(scores) {

@@ -43,7 +43,7 @@ export default function LifestyleGuide({ scores, onBack, onCoach }) {
   return (
     <div className="min-h-screen bg-[#faf7f2]">
       {/* Top bar */}
-      <div className="sticky top-0 z-10 bg-[#faf7f2] border-b border-[#e8dcc8]">
+      <div className="sticky top-0 z-10 bg-[#faf7f2]/95 backdrop-blur-sm border-b border-[#e8dcc8]" style={{ boxShadow: '0 1px 12px rgba(45,36,24,0.06)' }}>
         <div className="max-w-2xl mx-auto px-6 py-4 flex items-center justify-between gap-3">
           <button
             onClick={onBack}
@@ -66,7 +66,7 @@ export default function LifestyleGuide({ scores, onBack, onCoach }) {
             </button>
             <button
               onClick={onCoach}
-              className="flex items-center gap-1 px-3 py-1.5 rounded-full text-[10px] font-sans uppercase tracking-wider bg-[#c0704a] text-white hover:bg-[#a85e3d] transition-all cursor-pointer"
+              className="flex items-center gap-1 px-3 py-1.5 rounded-full text-[10px] font-sans uppercase tracking-wider bg-[#C06830] text-white hover:bg-[#a85e3d] transition-all cursor-pointer"
             >
               Coach
             </button>
@@ -74,22 +74,35 @@ export default function LifestyleGuide({ scores, onBack, onCoach }) {
         </div>
 
         {/* Tab bar */}
-        <div className="max-w-2xl mx-auto px-6 pb-0 flex gap-0 border-t border-[#e8dcc8]">
+        <div className="max-w-2xl mx-auto px-3 pb-2 flex gap-1 border-t border-[#e8dcc8] pt-2">
           {TABS.map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`flex-1 py-3 text-center transition-all cursor-pointer border-b-2 ${
+              className="flex-1 py-2 text-center transition-all duration-200 cursor-pointer rounded-full"
+              style={
                 activeTab === tab.id
-                  ? 'border-current'
-                  : 'border-transparent text-[#9c8660] hover:text-[#5c4d33]'
-              }`}
-              style={activeTab === tab.id ? { color, borderColor: color } : {}}
+                  ? {
+                      backgroundColor: color + '22',
+                      color: color,
+                      boxShadow: `0 1px 6px ${color}28`,
+                    }
+                  : { color: '#9c8660' }
+              }
+              onMouseEnter={e => {
+                if (activeTab !== tab.id) e.currentTarget.style.color = '#5c4d33';
+              }}
+              onMouseLeave={e => {
+                if (activeTab !== tab.id) e.currentTarget.style.color = '#9c8660';
+              }}
             >
               <p className="text-[10px] font-sans font-medium uppercase tracking-widest">
                 {tab.label}
               </p>
-              <p className="text-[9px] font-sans text-[#9c8660] italic hidden sm:block">
+              <p
+                className="text-[9px] font-sans italic hidden sm:block"
+                style={{ color: activeTab === tab.id ? color + 'aa' : '#9c8660' }}
+              >
                 {tab.sub}
               </p>
             </button>
